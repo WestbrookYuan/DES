@@ -90,8 +90,11 @@ class Cipher(Frame):
             return
         result = DES(message, key)
         if result.plaintext:
-            res = bytes.fromhex(result.plaintext[2:])
-            self.var2.set(res.decode())
+            try:
+                res = bytes.fromhex(result.plaintext[2:])
+                self.var2.set(res.decode())
+            except:
+                mbox.showwarning('错误', '密文缺失信息，无法解密！')
         else:
             mbox.showwarning('错误', '密文缺失信息，无法解密！')
 
