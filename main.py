@@ -59,9 +59,22 @@ class Cipher(Frame):
 
     def encrypt(self):
         message = self.ent1.get()
+
+        def convert(a):
+            base = a
+            by = bytes(base, 'UTF-8')  # 先将输入的字符串转化成字节码
+            hexstring = by.hex()
+
+            a = int(hexstring, 16)  # 将16进制字符串转换成整数
+
+            hex_name = hex(a)
+            return hex_name
+
+        # message = str(message.encode())
+        message = convert(message)
         key = self.ent2.get()
         if len(key) != 8:
-            mbox.showwarning('错误','密钥须为8字节字符！')
+            mbox.showwarning('错误', '密钥须为8字节字符！')
             return
         result = DES(message, key)
         self.var1.set(result.ciphertext)
@@ -73,11 +86,12 @@ class Cipher(Frame):
         message = self.ent4.get()
         key = self.ent5.get()
         if len(key) != 8:
-            mbox.showwarning('错误','密钥须为8字节字符！')
+            mbox.showwarning('错误', '密钥须为8字节字符！')
             return
         result = DES(message, key)
         if result.plaintext:
-            self.var2.set(result.plaintext)
+            res = bytes.fromhex(result.plaintext[2:])
+            self.var2.set(res.decode())
         else:
             mbox.showwarning('错误', '密文缺失信息，无法解密！')
 
